@@ -3,6 +3,9 @@ package com.mpost.models;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -13,16 +16,20 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @Size(min = 2)
+    @Size(min = 2, message = "First name should have at least 2 or more characters")
     private String firstName;
-    @Size(min = 2)
     private String lastName;
+    @Email
     private String email;
+    @Size(min = 10, max = 10, message = "Phone no must have 10 digits")
     private String phoneNo;
+    @Size(min = 10, max = 10, message = "Alternate no must have 10 digits")
     private String alternateNo;
+    @Size(min = 12, max = 12, message = "Aadhaar no must have 12 digits")
     private String aadhaarNo;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
+    @Valid
     private Address address;
 
     public User(){

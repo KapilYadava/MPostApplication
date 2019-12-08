@@ -1,5 +1,6 @@
 package com.mpost.controllers;
 
+import com.mpost.exceptions.UserNotFoundException;
 import com.mpost.models.Address;
 import com.mpost.models.User;
 import com.mpost.repositories.AddressRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Object> addUser(@RequestBody User user){
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user){
         User savedUser = userRepository.save(user);
         URI location = ServletUriComponentsBuilder.
                 fromCurrentRequest().path("/{id}")
@@ -57,8 +59,8 @@ public class UserController {
     }
     @GetMapping("/users/{id}")
     public User findUser(@PathVariable int id){
-        Optional user = userRepository.findById(id);
-        return (User) user.get();
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("id:" + id));
+        return user;
     }
 
     @DeleteMapping("/users/{id}")
@@ -74,8 +76,8 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable int id, @RequestBody User user){
-        User existingUser = userRepository.findById(id).get();
+    public ResponseEntity<Object> updateUser(@PathVariable int id, @Valid @RequestBody User user){
+        User existingUser = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("id: "+id));
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setAadhaarNo(user.getAadhaarNo());
@@ -88,15 +90,16 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}/address")
-    public ResponseEntity updateAddress(@PathVariable int userId, @RequestBody Address address){
-        User existingUser = userRepository.findById(userId).get();
+    public ResponseEntity updateAddress(@PathVariable int userId, @Valid @RequestBody Address address){
+        User existingUser = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("id: "+userId));
+        existingUser.setAddress(address);
         User savedUser =userRepository.save(existingUser);
         return ResponseEntity.ok(savedUser);
     }
 
     @GetMapping("/users/{id}/address")
     public Address findAddress(@PathVariable int id){
-        return userRepository.findById(id).get().getAddress();
+        return userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("id: "+id)).getAddress();
     }
 
 }

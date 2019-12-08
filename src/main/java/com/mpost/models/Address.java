@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "address")
@@ -13,14 +17,28 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @NotNull
+    @NotEmpty
     private String houseNo;
+    @NotNull
+    @NotEmpty
     private String street;
+    @NotNull
+    @Size(min = 2, message = "locality must not be null")
     private String locality;
+    @NotNull
+    @Size(min=2, message = "city must not be null")
     private String city;
+    @NotNull
+    @Size(min = 2, message = "state must not be null")
     private String state;
+    @NotNull
+    @Size(min =2, message = "country must not be null")
     private String country;
     private String landmark;
     private String gpsLocation;
+    @NotNull
+    @Size(min=6, max = 6, message = "pin must not be 6 digits")
     private String pin;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
     @JsonIgnore
