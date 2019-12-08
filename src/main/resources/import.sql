@@ -1,0 +1,4 @@
+INSERT INTO my_user (id, first_name, last_name, email, phone_no, alternate_no, aadhaar_no) VALUES (1, 'Kapil', 'Kumar', 'Kapilyadava.isa@gmail.com', '9718313865', '9718313865', '123456789012345');
+INSERT INTO my_user (id, first_name, last_name, email, phone_no, alternate_no, aadhaar_no) VALUES (2, 'Takshii', 'Yadav', 'takshiiyadava.isa@gmail.com', '9718313865', '9718313865', '12345');
+INSERT INTO address (id, house_no, street, locality, city, state, country, pin, landmark, gps_location, user_id) VALUES (1001, '36, Parteeksha, Pragthi Layout', '14th Cross Bhuvneshwari Nagar', 'Hebbal Kempapura', 'Bengalore', 'Karnataka', 'India', '560024', 'Ganga Bekery', 'null', 1);
+INSERT INTO address (id, house_no, street, locality, city, state, country, pin, landmark, gps_location, user_id) VALUES (1002, '36, Parteeksha, Pragthi Layout', '14th Cross Bhuvneshwari Nagar', 'Hebbal Kempapura', 'Bengalore', 'Karnataka', 'India', '560024', 'Ganga Bekery', 'null', 2);
