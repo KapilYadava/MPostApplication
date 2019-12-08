@@ -22,7 +22,7 @@ public class Address {
     private String landmark;
     private String gpsLocation;
     private String pin;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
     @JsonIgnore
     private User user;
 

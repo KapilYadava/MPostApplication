@@ -21,7 +21,8 @@ public class User {
     private String phoneNo;
     private String alternateNo;
     private String aadhaarNo;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
     private Address address;
 
     public User(){

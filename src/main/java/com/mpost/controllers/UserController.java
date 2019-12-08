@@ -20,8 +20,7 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private AddressRepository addressRepository;
+
     @GetMapping("/init")
     public String init(){
         Address address = new Address("36, prateeksha","14th Cross, Pragthi Layout",
@@ -36,8 +35,6 @@ public class UserController {
         user.setEmail("kapilyadava.isa@gmail.com");
         user.setAadhaarNo("12345678901234");
         User savedUser = userRepository.save(user);
-        address.setUser(savedUser);
-        addressRepository.save(address);
 
         return "init called!";
     }
@@ -45,9 +42,6 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<Object> addUser(@RequestBody User user){
         User savedUser = userRepository.save(user);
-        Address address = user.getAddress();
-        address.setUser(savedUser);
-        addressRepository.save(address);
         URI location = ServletUriComponentsBuilder.
                 fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId())
@@ -70,14 +64,12 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable int id){
         userRepository.deleteById(id);
-        addressRepository.deleteByUserId(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/users")
     public ResponseEntity<Object> deleteAllUser(){
         userRepository.deleteAll();
-        addressRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
 
@@ -90,44 +82,21 @@ public class UserController {
         existingUser.setAlternateNo(user.getAlternateNo());
         existingUser.setPhoneNo(user.getPhoneNo());
         existingUser.setEmail(user.getEmail());
-        //existingUser.setAddress(user.getAddress());
+        existingUser.setAddress(user.getAddress());
         User savedUser = userRepository.save(existingUser);
-//        Address address = addressRepository.findByUserId(id).get(0);
-//        address.setHouseNo(user.getAddress().getHouseNo());
-//        address.setStreet(user.getAddress().getStreet());
-//        address.setLocality(user.getAddress().getLocality());
-//        address.setCity(user.getAddress().getCity());
-//        address.setState(user.getAddress().getState());
-//        address.setCountry(user.getAddress().getCountry());
-//        address.setPin(user.getAddress().getPin());
-//        address.setLandmark(user.getAddress().getLandmark());
-//        address.setGpsLocation(user.getAddress().getGpsLocation());
-//        address.setUser(savedUser);
-//        addressRepository.save(address);
-        updateAddress(id, user.getAddress());
         return ResponseEntity.ok(savedUser);
     }
 
     @PutMapping("/users/{userId}/address")
     public ResponseEntity updateAddress(@PathVariable int userId, @RequestBody Address address){
-        Address existingAddress = addressRepository.findByUserId(userId).get(0);
-        existingAddress.setHouseNo(address.getHouseNo());
-        existingAddress.setStreet(address.getStreet());
-        existingAddress.setLocality(address.getLocality());
-        existingAddress.setCity(address.getCity());
-        existingAddress.setState(address.getState());
-        existingAddress.setCountry(address.getCountry());
-        existingAddress.setPin(address.getPin());
-        existingAddress.setLandmark(address.getLandmark());
-        existingAddress.setGpsLocation(address.getGpsLocation());
-        existingAddress.setUser(userRepository.findById(userId).get());
-        addressRepository.save(existingAddress);
-        return ResponseEntity.ok(existingAddress);
+        User existingUser = userRepository.findById(userId).get();
+        User savedUser =userRepository.save(existingUser);
+        return ResponseEntity.ok(savedUser);
     }
 
     @GetMapping("/users/{id}/address")
-    public List<Address> findAddress(@PathVariable int id){
-        return addressRepository.findByUserId(id);
+    public Address findAddress(@PathVariable int id){
+        return userRepository.findById(id).get().getAddress();
     }
 
 }
